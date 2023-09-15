@@ -3,6 +3,7 @@ import RelatedProduct from "./RelatedProduct";
 import Ratings from "react-ratings-declarative";
 import { Link } from "react-router-dom";
 import ScrollToTopOnMount from "../../template/ScrollToTopOnMount";
+import Form from "react-bootstrap/Form";
 
 const iconPath =
   "M18.571 7.221c0 0.201-0.145 0.391-0.29 0.536l-4.051 3.951 0.96 5.58c0.011 0.078 0.011 0.145 0.011 0.223 0 0.29-0.134 0.558-0.458 0.558-0.156 0-0.313-0.056-0.446-0.134l-5.011-2.634-5.011 2.634c-0.145 0.078-0.29 0.134-0.446 0.134-0.324 0-0.469-0.268-0.469-0.558 0-0.078 0.011-0.145 0.022-0.223l0.96-5.58-4.063-3.951c-0.134-0.145-0.279-0.335-0.279-0.536 0-0.335 0.346-0.469 0.625-0.513l5.603-0.815 2.511-5.078c0.1-0.212 0.29-0.458 0.547-0.458s0.446 0.246 0.547 0.458l2.511 5.078 5.603 0.815c0.268 0.045 0.625 0.179 0.625 0.513z";
@@ -12,11 +13,14 @@ function ProductDetail() {
 
   return (
     <div className="container mt-5 py-4 px-xl-5">
-      <ScrollToTopOnMount/>
+      <ScrollToTopOnMount />
       <nav aria-label="breadcrumb" className="bg-custom-light rounded mb-4">
         <ol className="breadcrumb p-3">
           <li className="breadcrumb-item">
-            <Link className="text-decoration-none link-secondary" to="/products">
+            <Link
+              className="text-decoration-none link-secondary"
+              to="/products"
+            >
               All Prodcuts
             </Link>
           </li>
@@ -59,29 +63,17 @@ function ProductDetail() {
               />
             </div>
           </div>
-
-          {/* <div className="row mt-2">
-            <div className="col-12">
-              <div
-                className="d-flex flex-nowrap"
-                style={{ overflowX: "scroll" }}
-              >
-                {Array.from({ length: 8 }, (_, i) => {
-                  return (
-                    <a key={i} href="!#">
-                      <img
-                        className="cover rounded mb-2 me-2"
-                        width="70"
-                        height="70"
-                        alt=""
-                        src={Image}
-                      />
-                    </a>
-                  );
-                })}
-              </div>
-            </div>
-          </div> */}
+          <Form>
+            <Form.Group className="mb-3" controlId="SendQuestion">
+              <Form.Label>No dude en consultarnos</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                placeholder="Enviar su consulta"
+              />
+            </Form.Group>
+            <button className="btn btn-dark py-2 w-30">Enviar</button>
+          </Form>
         </div>
 
         <div className="col-lg-5">
