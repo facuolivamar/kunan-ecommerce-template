@@ -10,14 +10,15 @@ import { fas } from "@fortawesome/free-solid-svg-icons";
 import { far } from "@fortawesome/free-regular-svg-icons";
 import { fab } from "@fortawesome/free-brands-svg-icons";
 import { HashRouter as Router } from "react-router-dom";
+import { AuthProvider } from "./AuthContext"; // Make sure to import AuthProvider
 
 library.add(fas, far, fab);
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Router>
+  <Router>
+    <AuthProvider>
       <App />
-    </Router>
-  </React.StrictMode>,
+    </AuthProvider>
+  </Router>,
   document.getElementById("root")
 );
