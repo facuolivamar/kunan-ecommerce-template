@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import Banner from "./Banner";
 import FeatureProduct from "./FeatureProduct";
 import ScrollToTopOnMount from "../template/ScrollToTopOnMount";
@@ -24,7 +25,10 @@ function Landing() {
       <div className="container pb-5 px-lg-5">
         <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 px-md-5">
           {Array.from({ length: 6 }, (_, i) => {
-            return <FeatureProduct key={i} />;
+            // Generate a unique postId for each FeatureProduct component
+            const postId = i + 1;
+
+            return <FeatureProduct key={postId} postId={postId} />;
           })}
         </div>
       </div>
