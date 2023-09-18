@@ -8,6 +8,7 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
   const [accessToken, setAccessToken] = useState(null);
+  const [authenticated, setAuthenticated] = useState(null);
 
   // Función para realizar la autenticación y almacenar el token de acceso
   async function authenticateUser(grant_type, client_id, client_secret) {
@@ -28,7 +29,9 @@ export function AuthProvider({ children }) {
 
       if (response.status === 200) {
         const data = await response.json();
-        setAccessToken(data.access);
+        // console.log(data);
+        setAccessToken(data.access_token);
+        setAuthenticated(true); // Establece el estado como autenticado
       } else {
         throw new Error('Autenticación fallida');
       }
@@ -39,7 +42,7 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ accessToken, authenticateUser }}>
+    <AuthContext.Provider value={{ accessToken, authenticated, authenticateUser }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
 import Product from "./Product";
 import ProductH from "./ProductH";
-import { useState } from "react";
+import { useState, useEffect  } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ScrollToTopOnMount from "../template/ScrollToTopOnMount";
+import { useAuth } from "../AuthContext"; // Asegúrate de importar desde la ubicación correcta
+import axios from "axios";
 
 const categories = [
   "All Products",
@@ -98,6 +100,34 @@ function FilterMenuLeft() {
 
 function ProductList() {
   const [viewType, setViewType] = useState({ grid: true });
+  const [products, setProducts] = useState([]); // Lista de productos
+
+  const { accessToken, authenticated } = useAuth();
+
+  useEffect(() => {
+    // Realiza la solicitud solo si la autenticación está completa
+    if (authenticated) {
+      // Define la URL de la API para obtener la lista de productos
+      const apiUrl =
+        "https://devphp7.democrm.com.ar/crmgrunhaut/Api/V8/module/AOS_Products?fields[AOS_Products]=name,part_number,tipo_c,marca_nombre_c,description,stock_c,price,product_image,date_entered&page[size]=10&page[number]=2&sort=name";
+
+      // Realiza la solicitud GET para obtener la lista de productos
+      axios
+        .get(apiUrl, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+        .then((response) => {
+          const productList = response.data["data"].map((product) => product.attributes);
+          setProducts(productList);
+        })
+        .catch((error) => {
+          console.error("Error al obtener la lista de productos:", error);
+        });
+    }
+  }, [accessToken, authenticated]);
 
   function changeViewType() {
     setViewType({
@@ -222,11 +252,13 @@ function ProductList() {
                 (viewType.grid ? "row-cols-xl-3" : "row-cols-xl-2")
               }
             >
-              {Array.from({ length: 10 }, (_, i) => {
-                return (
-                  <Product key={i} productId={i + 1} percentOff={i % 2 === 0 ? 15 : null} />
-                );
-              })}
+              {products.map((product, i) => (
+                <Product
+                  key={i}
+                  product={product} // Pasa el objeto de producto como prop
+                  percentOff={i % 2 === 0 ? 15 : null}
+                />
+              ))}
             </div>
             <div className="d-flex align-items-center mt-auto">
               <span className="text-muted small d-none d-md-inline">

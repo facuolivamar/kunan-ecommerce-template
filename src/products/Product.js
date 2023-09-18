@@ -3,34 +3,17 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "../nillkin-case-1.jpg";
+import { useAuth } from "../AuthContext"; // Asegúrate de importar desde la ubicación correcta
 
 function Product(props) {
-  const price = 10000;
+  const price = props.product.price;
   let percentOff;
-  let offPrice = `${price}Ks`;
+  let offPrice = `$${price}`;
 
-  const [product, setProduct] = useState({});
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Define the JSONPlaceholder API URL based on the product ID passed as a prop
-    const apiUrl = `https://jsonplaceholder.typicode.com/posts/${props.productId}`;
-
-    // Make the GET request to fetch product data
-    axios
-      .get(apiUrl)
-      .then((response) => {
-        setProduct(response.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error(`Error fetching product data for ID ${props.productId}:`, error);
-        setLoading(false);
-      });
-  }, [props.productId]);
+  const [loading, setLoading] = useState(false);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>Cargando...</div>;
   }
 
   if (props.percentOff && props.percentOff > 0) {
@@ -45,7 +28,7 @@ function Product(props) {
 
     offPrice = (
       <>
-        <del>{price}Ks</del> {price - (props.percentOff * price) / 100}Ks
+        <del>${price}</del> ${price - (props.percentOff * price) / 100}
       </>
     );
   }
@@ -53,19 +36,19 @@ function Product(props) {
   return (
     <div className="col">
       <div className="card shadow-sm">
-        <Link to={`/products/${props.productId}`} href="!#" replace>
+        <Link to={`/products/${props.product.id}`} href="!#" replace>
           {percentOff}
           <img
             className="card-img-top bg-dark cover"
             height="200"
             alt=""
             src={Image}
-            // src={product.image} // Use the product image if available
+            // src={props.product.image} // Usa el campo de imagen del producto si está disponible
           />
         </Link>
         <div className="card-body">
           <h5 className="card-title text-center text-dark text-truncate">
-            {product.title} {/* Display the product title */}
+            {props.product.name} {/* Muestra el nombre del producto */}
           </h5>
           <p className="card-text text-center text-muted mb-0">{offPrice}</p>
           <div className="d-grid d-block">
