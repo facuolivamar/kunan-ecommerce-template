@@ -223,13 +223,8 @@ function ProductList() {
               }
             >
               {Array.from({ length: 10 }, (_, i) => {
-                if (viewType.grid) {
-                  return (
-                    <Product key={i} percentOff={i % 2 === 0 ? 15 : null} />
-                  );
-                }
                 return (
-                  <ProductH key={i} percentOff={i % 4 === 0 ? 15 : null} />
+                  <Product key={i} productId={i + 1} percentOff={i % 2 === 0 ? 15 : null} />
                 );
               })}
             </div>
