@@ -1,14 +1,45 @@
-import Image from "../../nillkin-case-1.jpg";
-import RelatedProduct from "./RelatedProduct";
-import Ratings from "react-ratings-declarative";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import axios from "axios";
 import ScrollToTopOnMount from "../../template/ScrollToTopOnMount";
 import Form from "react-bootstrap/Form";
+import Ratings from "react-ratings-declarative";
+import Image from "../../nillkin-case-1.jpg";
+import RelatedProduct from "./RelatedProduct";
 
 const iconPath =
   "M18.571 7.221c0 0.201-0.145 0.391-0.29 0.536l-4.051 3.951 0.96 5.58c0.011 0.078 0.011 0.145 0.011 0.223 0 0.29-0.134 0.558-0.458 0.558-0.156 0-0.313-0.056-0.446-0.134l-5.011-2.634-5.011 2.634c-0.145 0.078-0.29 0.134-0.446 0.134-0.324 0-0.469-0.268-0.469-0.558 0-0.078 0.011-0.145 0.022-0.223l0.96-5.58-4.063-3.951c-0.134-0.145-0.279-0.335-0.279-0.536 0-0.335 0.346-0.469 0.625-0.513l5.603-0.815 2.511-5.078c0.1-0.212 0.29-0.458 0.547-0.458s0.446 0.246 0.547 0.458l2.511 5.078 5.603 0.815c0.268 0.045 0.625 0.179 0.625 0.513z";
 
-function ProductDetail() {
+  function ProductDetail() {
+    // Extract the slug (product ID) from the URL
+    const { slug } = useParams();
+  
+    // Define state variables to store product details
+    const [product, setProduct] = useState({});
+    const [loading, setLoading] = useState(true);
+  
+    useEffect(() => {
+      // Define the JSONPlaceholder API URL based on the slug (product ID)
+      const apiUrl = `https://jsonplaceholder.typicode.com/posts/${slug}`;
+  
+      // Make the GET request to fetch product data
+      axios
+        .get(apiUrl)
+        .then((response) => {
+          setProduct(response.data);
+          setLoading(false);
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.error(`Error fetching product data for slug ${slug}:`, error);
+          setLoading(false);
+        });
+    }, [slug]);
+  
+    if (loading) {
+      return <div>Loading...</div>;
+    }
+
   function changeRating(newRating) {}
 
   return (
@@ -78,7 +109,7 @@ function ProductDetail() {
 
         <div className="col-lg-5">
           <div className="d-flex flex-column h-100">
-            <h2 className="mb-1">Nillkin iPhone X cover</h2>
+            <h2 className="mb-1">{product.title}</h2>
             <h4 className="text-muted mb-4">10000 Ks</h4>
 
             <div className="row g-3 mb-4">
@@ -140,15 +171,7 @@ function ProductDetail() {
             <hr />
             <p className="lead flex-shrink-0">
               <small>
-                Nature (TPU case) use environmental non-toxic TPU, silky smooth
-                and ultrathin. Glittering and translucent, arbitrary rue
-                reserved volume button cutouts, easy to operate. Side frosted
-                texture anti-slipping, details show its concern; transparent
-                frosted logo shows its taste. The release of self, the flavor of
-                life. Nillkin launched Nature transparent soft cover, only to
-                retain the original phone style. Subverting tradition,
-                redefinition. Thinner design Environmental texture better hand
-                feeling.
+                {product.body}
               </small>
             </p>
           </div>
@@ -160,11 +183,10 @@ function ProductDetail() {
           <hr />
           <h4 className="text-muted my-4">Related products</h4>
           <div className="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-3">
-            {Array.from({ length: 4 }, (_, i) => {
-              return (
-                <RelatedProduct key={i} percentOff={i % 2 === 0 ? 15 : null} />
-              );
-            })}
+          {Array.from({ length: 4 }, (_, i) => {
+            // Assuming productId is 1, 2, 3, and 4 for the related products
+            return <RelatedProduct key={i} productId={i + 1} percentOff={i % 2 === 0 ? 15 : null} />;
+          })}
           </div>
         </div>
       </div>
